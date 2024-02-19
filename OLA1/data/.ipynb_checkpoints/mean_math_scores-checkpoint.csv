@@ -1,0 +1,25 @@
+gender,lunch,parental level of education,math score
+female,free/reduced,associate's degree,57.97222222222222
+female,free/reduced,bachelor's degree,63.36363636363637
+female,free/reduced,high school,51.62162162162162
+female,free/reduced,master's degree,57.785714285714285
+female,free/reduced,some college,58.45454545454545
+female,free/reduced,some high school,49.361111111111114
+female,standard,associate's degree,68.525
+female,standard,bachelor's degree,71.02439024390245
+female,standard,high school,64.36842105263158
+female,standard,master's degree,72.04545454545455
+female,standard,some college,69.54054054054055
+female,standard,some high school,65.8
+male,free/reduced,associate's degree,66.6829268292683
+male,free/reduced,bachelor's degree,62.63636363636363
+male,free/reduced,high school,57.75757575757576
+male,free/reduced,master's degree,65.9
+male,free/reduced,some college,62.22857142857143
+male,free/reduced,some high school,60.52
+male,standard,associate's degree,73.33846153846154
+male,standard,bachelor's degree,75.87878787878788
+male,standard,high school,68.02898550724638
+male,standard,master's degree,81.6923076923077
+male,standard,some college,72.26027397260275
+male,standard,some high school,70.74603174603175
