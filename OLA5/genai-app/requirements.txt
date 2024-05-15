@@ -7,3 +7,5 @@ wordcloud
 sentence-transformers
 pymupdf
 python-docx
+pypdf
+chromadb

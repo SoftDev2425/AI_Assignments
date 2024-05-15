@@ -3,38 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GenAI Application</title>
+    <title>GenAI Document Question Answering</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-        padding: 20px;
-        background-color: #f9f9f9;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
       }
-      form {
+
+      .container {
+        max-width: 600px;
+        width: 100%;
         background: #fff;
-        padding: 20px;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
       input[type="file"],
-      input[type="text"],
+      textarea,
       button {
-        display: block;
-        margin: 10px 0;
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      button {
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+
+      #answer {
+        font-size: 18px;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
       }
     </style>
   </head>
   <body>
-    <h1>GenAI Document Question Answering</h1>
-    <form id="upload-form" enctype="multipart/form-data">
-      <label for="files">Upload Documents:</label>
-      <input type="file" id="files" name="files" multiple required />
-      <label for="question">Your Question:</label>
-      <input type="text" id="question" name="question" required />
-      <button type="submit">Submit</button>
-    </form>
-    <h2>Answer:</h2>
-    <p id="answer"></p>
+    <div class="container">
+      <h1>GenAI Document Question Answering</h1>
+      <form id="upload-form" enctype="multipart/form-data">
+        <label for="files">Upload Documents:</label>
+        <input type="file" id="files" name="files" multiple required />
+        <label for="question">Your Question:</label>
+        <textarea id="question" name="question" rows="4" required></textarea>
+        <button type="submit">Submit</button>
+      </form>
+      <h2>Answer:</h2>
+      <p id="answer"></p>
+    </div>
 
     <script>
       document.getElementById("upload-form").addEventListener("submit", async function (event) {
