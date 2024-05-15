@@ -1,0 +1,9 @@
+langchain
+torch
+pandas
+spacy
+langdetect
+wordcloud
+sentence-transformers
+pymupdf
+python-docx

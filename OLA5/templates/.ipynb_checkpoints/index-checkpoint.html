@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document QA</title>
+</head>
+<body>
+    <h1>Upload Documents and Ask a Question</h1>
+    <form action="/ask" method="post" enctype="multipart/form-data">
+        <label for="files">Select documents:</label>
+        <input type="file" id="files" name="files" multiple required><br><br>
+        <label for="question">Enter your question:</label>
+        <input type="text" id="question" name="question" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+    <h2 id="answer"></h2>
+    <script>
+        document.querySelector('form').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch('/ask', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if (result.error) {
+                document.getElementById('answer').textContent = `Error: ${result.error}`;
+            } else {
+                document.getElementById('answer').textContent = `Answer: ${result.answer}`;
+            }
+        };
+    </script>
+</body>
+</html>

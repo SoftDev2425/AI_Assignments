@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GenAI Application</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background-color: #f9f9f9;
+      }
+      form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      input[type="file"],
+      input[type="text"],
+      button {
+        display: block;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>GenAI Document Question Answering</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+      <label for="files">Upload Documents:</label>
+      <input type="file" id="files" name="files" multiple required />
+      <label for="question">Your Question:</label>
+      <input type="text" id="question" name="question" required />
+      <button type="submit">Submit</button>
+    </form>
+    <h2>Answer:</h2>
+    <p id="answer"></p>
+
+    <script>
+      document.getElementById("upload-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const formData = new FormData();
+        const files = document.getElementById("files").files;
+        const question = document.getElementById("question").value;
+
+        for (let i = 0; i < files.length; i++) {
+          formData.append("files", files[i]);
+        }
+        formData.append("question", question);
+
+        const response = await fetch("/ask", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        document.getElementById("answer").innerText = result.answer;
+      });
+    </script>
+  </body>
+</html>
