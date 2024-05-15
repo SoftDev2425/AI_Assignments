@@ -51,7 +51,14 @@ app.post("/ask", upload.array("files"), (req, res) => __awaiter(void 0, void 0, 
                 console.error(`exec error: ${error}`);
                 return res.status(500).json({ error: "Error processing the request" });
             }
-            res.json({ answer: stdout.trim() });
+            // check for duplicated sentences in the answer and filter out
+            // Split the stdout into sentences
+            const sentences = stdout.trim().split(/(?<=[.!?])\s+/);
+            // Remove duplicate sentences
+            const uniqueSentences = [...new Set(sentences)];
+            // Join the unique sentences back into a single string
+            const uniqueAnswer = uniqueSentences.join(" ");
+            res.json({ answer: uniqueAnswer });
         });
     }
     catch (error) {
