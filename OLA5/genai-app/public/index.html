@@ -1,111 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GenAI Document Question Answering</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GenAI Document Question Answering</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    input[type="file"],
+    textarea,
+    button {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #answer {
+      font-size: 18px;
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #666;
+      margin-top: -10px;
+      margin-bottom: 20px;
+    }
+
+    .error {
+      color: #f00;
+      margin-top: -5px;
+      margin-bottom: 10px;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 8px solid #3498db;
+      width: 50px;
+      height: 50px;
+      animation: spin 2s linear infinite;
+      margin: 0 auto;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>GenAI Document Question Answering</h1>
+    <form id="upload-form" enctype="multipart/form-data">
+      <label for="files">Upload Documents:</label>
+      <input type="file" id="files" name="files" multiple required accept=".pdf" />
+      <div class="note">Note: File names should not contain whitespace.</div>
+      <label for="question">Your Question:</label>
+      <textarea id="question" name="question" rows="4" required></textarea>
+      <div id="file-error" class="error" style="display: none;">Please upload a file without whitespace in the name.</div>
+      <button type="submit" id="submit-btn">Submit</button>
+      <div id="loader" class="loader" style="display: none;"></div>
+    </form>
+    <h2>Answer:</h2>
+    <p id="answer"></p>
+  </div>
+
+  <script>
+    document.getElementById("upload-form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const formData = new FormData();
+      const files = document.getElementById("files").files;
+      const question = document.getElementById("question").value;
+
+      // Check if any uploaded file has whitespace in the name
+      const fileNames = Array.from(files).map(file => file.name);
+      const hasWhiteSpace = fileNames.some(name => /\s/.test(name));
+
+      if (hasWhiteSpace) {
+        document.getElementById("file-error").style.display = "block";
+        return;
+      } else {
+        document.getElementById("file-error").style.display = "none";
       }
 
-      .container {
-        max-width: 600px;
-        width: 100%;
-        background: #fff;
-        padding: 30px;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
       }
+      formData.append("question", question);
 
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-      }
+      const submitBtn = document.getElementById("submit-btn");
+      const loader = document.getElementById("loader");
 
-      form {
-        display: flex;
-        flex-direction: column;
-      }
+      submitBtn.disabled = true;
+      loader.style.display = "block";
 
-      label {
-        font-weight: bold;
-        margin-bottom: 8px;
-      }
-
-      input[type="file"],
-      textarea,
-      button {
-        margin-bottom: 20px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        width: 100%;
-        box-sizing: border-box;
-      }
-
-      button {
-        background-color: #4caf50;
-        color: white;
-        cursor: pointer;
-      }
-
-      button:hover {
-        background-color: #45a049;
-      }
-
-      #answer {
-        font-size: 18px;
-        margin-top: 20px;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <h1>GenAI Document Question Answering</h1>
-      <form id="upload-form" enctype="multipart/form-data">
-        <label for="files">Upload Documents:</label>
-        <input type="file" id="files" name="files" multiple required />
-        <label for="question">Your Question:</label>
-        <textarea id="question" name="question" rows="4" required></textarea>
-        <button type="submit">Submit</button>
-      </form>
-      <h2>Answer:</h2>
-      <p id="answer"></p>
-    </div>
-
-    <script>
-      document.getElementById("upload-form").addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        const formData = new FormData();
-        const files = document.getElementById("files").files;
-        const question = document.getElementById("question").value;
-
-        for (let i = 0; i < files.length; i++) {
-          formData.append("files", files[i]);
-        }
-        formData.append("question", question);
-
-        const response = await fetch("/ask", {
-          method: "POST",
-          body: formData,
-        });
-
-        const result = await response.json();
-        document.getElementById("answer").innerText = result.answer;
+      const response = await fetch("/ask", {
+        method: "POST",
+        body: formData,
       });
-    </script>
-  </body>
+
+      submitBtn.disabled = false;
+      loader.style.display = "none";
+
+      const result = await response.json();
+      document.getElementById("answer").innerText = result.answer;
+    });
+  </script>
+</body>
 </html>
